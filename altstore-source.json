@@ -1,0 +1,19 @@
+{
+  "name": "Homelab Core",
+  "identifier": "de.timm.homelabsource",
+  "apps": [
+    {
+      "name": "Homelab Core",
+      "bundleIdentifier": "de.timm.eigenappFuerIos",
+      "developerName": "LegoPuck",
+      "version": "1.0.0",
+      "versionDate": "2026-10-22T14:50:00+02:00",
+      "versionDescription": "Initial Release: Adobe OLED Design, Home Assistant Sensor Streaming, Homelab Hub",
+      "downloadURL": "https://github.com/LegoPuck-orginal/homelab-ios-app/releases/download/latest/homelab-core.ipa",
+      "localizedDescription": "Adobe OLED Dark Theme Homelab Hub & iOS Sensor Streaming App for Home Assistant.",
+      "iconURL": "https://raw.githubusercontent.com/LegoPuck-orginal/homelab-ios-app/master/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png",
+      "tintColor": "FF7A00",
+      "size": 9112000
+    }
+  ]
+}
