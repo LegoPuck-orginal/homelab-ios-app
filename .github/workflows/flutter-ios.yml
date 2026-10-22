@@ -1,14 +1,16 @@
-name: Flutter iOS Build & Analyze
+name: Flutter iOS Build & Sideload Release
 
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
-    name: Flutter Analyze & iOS Build
+    name: Build Sideload IPA & Analyze
     runs-on: macos-latest
 
     steps:
@@ -27,11 +29,33 @@ jobs:
       - name: Analyze Dart Code
         run: flutter analyze
 
-      - name: Build iOS Application (Simulator / No CodeSign)
-        run: flutter build ios --no-codesign --simulator
+      - name: Build iOS Release App (Device / No CodeSign)
+        run: flutter build ios --no-codesign --release
 
-      - name: Upload iOS App Artifact
+      - name: Package Unsigned IPA for Sideloading
+        run: |
+          mkdir -p Payload
+          cp -r build/ios/iphoneos/Runner.app Payload/
+          zip -qr homelab-core.ipa Payload
+          ls -lh homelab-core.ipa
+
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Runner-iOS-Simulator
-          path: build/ios/iphonesimulator/Runner.app
+          name: homelab-core-ipa
+          path: homelab-core.ipa
+
+      - name: Publish Sideload Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/master'
+        with:
+          tag_name: latest
+          name: "Homelab Core iOS (Latest Sideload Build)"
+          body: |
+            ### 📱 Homelab Core iOS - Sideload Release
+            Diese `.ipa`-Datei ist bereit für die Installation über **SideStore**, **Sideloadly** oder **AltStore**.
+            
+            * **Design**: Adobe OLED True Black (`#000000`) & Adobe Orange (`#FF7A00`)
+            * **Sensoren**: Akku, CoreMotion (Gyro, Beschleunigung), Pedometer, GPS, Netzwerk, Helligkeit
+            * **Dienste**: Proxmox VE, Home Assistant, Open WebUI, Jellyfin, Pi-hole u.v.m.
+          files: homelab-core.ipa
